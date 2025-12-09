@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk DOM Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-dark">
+
+    <div class="scanline-effect"></div>
+
+    <div class="interface-panel">
+        <h1 class="glitch" data-text="DOM INTERFACE">DOM INTERFACE</h1>
+
+        <section>
+            <h2 class="neon-text">1. [DATA LOG] Dynamic Item List</h2>
+            <div class="input-group">
+                <input type="text" id="itemInput" placeholder="> INPUT ITEM NAME" class="data-input">
+                <button id="addItemButton" class="neon-btn primary-btn">ADD &lt;ITEM&gt;</button>
+            </div>
+            <ul id="dynamicList" class="data-list">
+                </ul>
+        </section>
+
+        <hr class="divider">
+
+        <section>
+            <h2 class="neon-text">2. [THEME] Environment Colors</h2>
+            <div class="button-group">
+                <button class="theme-btn" style="--btn-color: #00ffff;" onclick="changeBackgroundColor('#00ffff')">CYAN</button>
+                <button class="theme-btn" style="--btn-color: #ff00ff;" onclick="changeBackgroundColor('#ff00ff')">MAGENTA</button>
+                <button class="theme-btn" style="--btn-color: #ff9900;" onclick="changeBackgroundColor('#ff9900')">ORANGE</button>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section>
+            <h2 class="neon-text">3. [PROCESS] Counter Unit</h2>
+            <div id="counterSection">
+                <div class="counter-display-area">
+                    <button id="decrementButton" class="neon-btn control-btn">-</button>
+                    <div class="counter-box">
+                        <span id="counterValue" class="display-value">0</span>
+                    </div>
+                    <button id="incrementButton" class="neon-btn control-btn">+</button>
+                </div>
+                <button id="resetButton" class="neon-btn secondary-btn">R_E_S_E_T</button>
+            </div>
+        </section>
+
+        <hr class="divider">
+
+        <section>
+            <h2 class="neon-text">4. [STATUS] Visibility Toggle</h2>
+            <button id="toggleButton" class="neon-btn secondary-btn toggle-btn">LOAD DATA</button>
+            <div id="toggleContainer" class="toggle-display hidden-content">
+                <p id="toggleParagraph">ACCESS DENIED. DATA OFFLINE.</p>
+            </div>
+        </section>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>

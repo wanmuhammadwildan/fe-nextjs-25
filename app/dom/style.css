@@ -1,0 +1,271 @@
+/* --- Variabel Warna dan Tema --- */
+:root {
+    --bg-dark: #1f1f2e; /* Deep Dark Purple/Blue */
+    --surface-dark: #2a2a3c;
+    --text-neon: #00ffff; /* Default Cyan */
+    --accent-neon: #ff00ff; /* Magenta */
+    --error-neon: #ff3333; /* Red Error */
+    /* Intensitas bayangan neon untuk teks dan kotak */
+    --shadow-intensity: 0 0 5px, 0 0 10px, 0 0 20px, 0 0 40px var(--text-neon);
+}
+
+/* Keyframes untuk Efek Glitch */
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* Keyframes untuk Efek Neon Flicker */
+@keyframes flicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+        opacity: 1;
+    }
+    20%, 24%, 55% {
+        opacity: 0.8;
+    }
+}
+
+/* Global Reset dan Dasar */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Share Tech Mono', monospace;
+    background-color: var(--bg-dark);
+    color: var(--text-neon);
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: background-color 0.8s ease-in-out;
+    padding: 50px 0;
+}
+
+/* Efek Scanline */
+.scanline-effect {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.1),
+        rgba(0, 0, 0, 0.2) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+    pointer-events: none;
+    z-index: 10;
+}
+
+.interface-panel {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px;
+    background: var(--surface-dark);
+    border-radius: 8px;
+    border: 1px solid var(--text-neon);
+    box-shadow: 0 0 10px var(--text-neon);
+    position: relative;
+    z-index: 5;
+    animation: flicker 4s infinite alternate; /* Panel flicker halus */
+}
+
+/* Header dan Teks Neon */
+.glitch {
+    font-size: 3em;
+    text-align: center;
+    color: var(--text-neon);
+    text-shadow: 0 0 10px var(--text-neon), 0 0 20px var(--text-neon);
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.neon-text {
+    color: var(--accent-neon);
+    text-shadow: 0 0 5px var(--accent-neon);
+    font-weight: 700;
+    margin-top: 35px;
+    margin-bottom: 15px;
+    padding-left: 10px;
+    border-left: 3px solid var(--accent-neon);
+}
+
+.divider {
+    margin: 40px 0;
+    border: none;
+    border-top: 1px dashed var(--text-neon);
+    opacity: 0.5;
+}
+
+/* --- Input dan Tombol --- */
+.input-group, .button-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.data-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--text-neon);
+    border-radius: 4px;
+    margin-right: 15px;
+    background: var(--bg-dark);
+    color: var(--text-neon);
+    box-shadow: inset 0 0 5px var(--text-neon);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.data-input:focus {
+    border-color: var(--accent-neon);
+    box-shadow: inset 0 0 8px var(--accent-neon);
+    outline: none;
+}
+
+.neon-btn {
+    padding: 10px 18px;
+    border: 1px solid var(--text-neon);
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    background: var(--surface-dark);
+    color: var(--text-neon);
+    box-shadow: 0 0 5px var(--text-neon);
+    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+.neon-btn:hover {
+    background: var(--text-neon);
+    color: var(--bg-dark);
+    box-shadow: 0 0 10px var(--text-neon);
+}
+
+.primary-btn {
+    color: var(--accent-neon);
+    border-color: var(--accent-neon);
+    box-shadow: 0 0 5px var(--accent-neon);
+}
+
+.primary-btn:hover {
+    background: var(--accent-neon);
+    color: var(--surface-dark);
+}
+
+.neon-btn:active {
+    transform: translateY(1px);
+    box-shadow: inset 0 0 5px var(--bg-dark);
+}
+
+/* 1. Dynamic List Styling */
+.data-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.data-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface-dark);
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px dashed var(--text-neon);
+    text-shadow: 0 0 2px var(--text-neon);
+    opacity: 1; 
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.data-list li button {
+    background-color: var(--error-neon);
+    color: var(--bg-dark);
+    padding: 6px 12px;
+    font-size: 0.8em;
+    border-radius: 4px;
+    box-shadow: 0 0 5px var(--error-neon);
+    border: none;
+}
+
+/* 2. Color Changer */
+.theme-btn {
+    --btn-color: var(--text-neon);
+    background-color: var(--btn-color);
+    color: var(--bg-dark);
+    padding: 10px 18px;
+    border-radius: 4px;
+    margin-right: 15px;
+    box-shadow: 0 0 10px var(--btn-color);
+    transition: all 0.2s;
+    font-size: 0.9em;
+}
+
+/* 3. Counter Styling */
+#counterSection {
+    text-align: center;
+}
+
+.counter-display-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.counter-box {
+    border: 2px solid var(--accent-neon);
+    padding: 5px 15px;
+    background: var(--bg-dark);
+    box-shadow: 0 0 10px var(--accent-neon);
+    margin: 0 15px;
+}
+
+.display-value {
+    font-size: 3em;
+    font-weight: 700;
+    color: var(--accent-neon);
+    text-shadow: 0 0 5px var(--accent-neon);
+    transition: transform 0.1s;
+}
+
+.control-btn {
+    font-size: 1.8em;
+}
+
+/* Kelas Animasi JS */
+.glitch-active {
+    animation: glitch 0.1s 3; /* Glitch cepat 3x */
+    color: var(--error-neon) !important;
+    text-shadow: 0 0 5px var(--error-neon);
+}
+
+/* 4. Toggle Show/Hide Styling dan Animasi */
+.toggle-display {
+    max-height: 200px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 0.6s ease-in-out, opacity 0.6s ease-in-out;
+}
+
+#toggleParagraph {
+    background: var(--bg-dark);
+    border: 2px solid var(--text-neon);
+    padding: 20px;
+    border-radius: 4px;
+    margin-top: 15px;
+    color: var(--text-neon);
+    box-shadow: 0 0 5px var(--text-neon);
+}
+
+.hidden-content {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+}
