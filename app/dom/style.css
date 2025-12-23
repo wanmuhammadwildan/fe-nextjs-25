@@ -1,32 +1,11 @@
-/* --- Variabel Warna dan Tema --- */
+/* --- Variabel Warna dan Gaya Neumorphism --- */
 :root {
-    --bg-dark: #1f1f2e; /* Deep Dark Purple/Blue */
-    --surface-dark: #2a2a3c;
-    --text-neon: #00ffff; /* Default Cyan */
-    --accent-neon: #ff00ff; /* Magenta */
-    --error-neon: #ff3333; /* Red Error */
-    /* Intensitas bayangan neon untuk teks dan kotak */
-    --shadow-intensity: 0 0 5px, 0 0 10px, 0 0 20px, 0 0 40px var(--text-neon);
-}
-
-/* Keyframes untuk Efek Glitch */
-@keyframes glitch {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(-2px, -2px); }
-    60% { transform: translate(2px, 2px); }
-    80% { transform: translate(2px, -2px); }
-    100% { transform: translate(0); }
-}
-
-/* Keyframes untuk Efek Neon Flicker */
-@keyframes flicker {
-    0%, 18%, 22%, 25%, 53%, 57%, 100% {
-        opacity: 1;
-    }
-    20%, 24%, 55% {
-        opacity: 0.8;
-    }
+    --bg-color: #e0e5ec; /* Warna latar belakang tunggal (Light Gray-Blue) */
+    --main-color: #616e7f; /* Warna teks utama */
+    --accent-color: #3f51b5; /* Warna aksen utama (Biru) */
+    --shadow-light: #ffffff; /* Warna bayangan terang */
+    --shadow-dark: #a3b1c6; /* Warna bayangan gelap */
+    --neumorphic-radius: 12px;
 }
 
 /* Global Reset dan Dasar */
@@ -37,71 +16,50 @@
 }
 
 body {
-    font-family: 'Share Tech Mono', monospace;
-    background-color: var(--bg-dark);
-    color: var(--text-neon);
+    font-family: 'Nunito', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--main-color);
     line-height: 1.6;
     min-height: 100vh;
-    transition: background-color 0.8s ease-in-out;
-    padding: 50px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: background-color 0.5s ease-in-out; 
 }
 
-/* Efek Scanline */
-.scanline-effect {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.1),
-        rgba(0, 0, 0, 0.2) 1px,
-        transparent 2px,
-        transparent 4px
-    );
-    pointer-events: none;
-    z-index: 10;
+.container {
+    padding: 30px;
 }
 
-.interface-panel {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px;
-    background: var(--surface-dark);
-    border-radius: 8px;
-    border: 1px solid var(--text-neon);
-    box-shadow: 0 0 10px var(--text-neon);
-    position: relative;
-    z-index: 5;
-    animation: flicker 4s infinite alternate; /* Panel flicker halus */
+/* --- Efek Neumorphism Dasar (Cembung) --- */
+.neumorphic-card {
+    border-radius: var(--neumorphic-radius);
+    background: var(--bg-color);
+    box-shadow: 8px 8px 16px var(--shadow-dark), 
+                -8px -8px 16px var(--shadow-light);
+    padding: 30px 40px;
+    max-width: 700px;
 }
 
-/* Header dan Teks Neon */
-.glitch {
-    font-size: 3em;
+h1 {
     text-align: center;
-    color: var(--text-neon);
-    text-shadow: 0 0 10px var(--text-neon), 0 0 20px var(--text-neon);
-    margin-bottom: 50px;
-    position: relative;
+    color: var(--accent-color);
+    margin-bottom: 30px;
+    font-size: 1.8em;
 }
 
-.neon-text {
-    color: var(--accent-neon);
-    text-shadow: 0 0 5px var(--accent-neon);
+h2 {
+    color: var(--main-color);
     font-weight: 700;
-    margin-top: 35px;
+    margin-top: 25px;
     margin-bottom: 15px;
-    padding-left: 10px;
-    border-left: 3px solid var(--accent-neon);
+    padding-bottom: 5px;
 }
 
-.divider {
-    margin: 40px 0;
-    border: none;
-    border-top: 1px dashed var(--text-neon);
-    opacity: 0.5;
+.section-container {
+    padding: 15px 0;
+    border-top: 1px solid rgba(163, 177, 198, 0.3);
 }
 
 /* --- Input dan Tombol --- */
@@ -111,98 +69,105 @@ body {
     margin-bottom: 20px;
 }
 
-.data-input {
+/* Input Cekung */
+.neumorphic-input {
     flex-grow: 1;
-    padding: 10px;
-    border: 1px solid var(--text-neon);
-    border-radius: 4px;
+    padding: 12px;
+    border: none;
+    border-radius: var(--neumorphic-radius);
     margin-right: 15px;
-    background: var(--bg-dark);
-    color: var(--text-neon);
-    box-shadow: inset 0 0 5px var(--text-neon);
-    transition: border-color 0.3s, box-shadow 0.3s;
+    background: var(--bg-color);
+    color: var(--main-color);
+    box-shadow: inset 4px 4px 8px var(--shadow-dark), 
+                inset -4px -4px 8px var(--shadow-light);
+    transition: box-shadow 0.2s;
 }
 
-.data-input:focus {
-    border-color: var(--accent-neon);
-    box-shadow: inset 0 0 8px var(--accent-neon);
+.neumorphic-input:focus {
+    box-shadow: inset 1px 1px 2px var(--shadow-dark), 
+                inset -1px -1px 2px var(--shadow-light);
     outline: none;
 }
 
-.neon-btn {
-    padding: 10px 18px;
-    border: 1px solid var(--text-neon);
-    border-radius: 4px;
+/* Tombol Cembung Dasar */
+.neumorphic-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--neumorphic-radius);
     cursor: pointer;
-    font-weight: 600;
-    background: var(--surface-dark);
-    color: var(--text-neon);
-    box-shadow: 0 0 5px var(--text-neon);
-    transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+    font-weight: 700;
+    color: var(--main-color);
+    background: var(--bg-color);
+    box-shadow: 4px 4px 8px var(--shadow-dark), 
+                -4px -4px 8px var(--shadow-light);
+    transition: box-shadow 0.2s, transform 0.1s;
 }
 
-.neon-btn:hover {
-    background: var(--text-neon);
-    color: var(--bg-dark);
-    box-shadow: 0 0 10px var(--text-neon);
+/* Efek Tekan/Active (Tombol menjadi Cekung) */
+.neumorphic-btn:active, .btn-pressed {
+    box-shadow: inset 2px 2px 5px var(--shadow-dark), 
+                inset -2px -2px 5px var(--shadow-light);
+    transform: scale(0.98);
 }
 
-.primary-btn {
-    color: var(--accent-neon);
-    border-color: var(--accent-neon);
-    box-shadow: 0 0 5px var(--accent-neon);
+/* Warna Aksen */
+.accent-btn {
+    color: white;
+    background-color: var(--accent-color);
+    box-shadow: 4px 4px 10px rgba(63, 81, 181, 0.4);
+}
+.accent-btn:active {
+    background-color: #5c6bc0;
 }
 
-.primary-btn:hover {
-    background: var(--accent-neon);
-    color: var(--surface-dark);
-}
-
-.neon-btn:active {
-    transform: translateY(1px);
-    box-shadow: inset 0 0 5px var(--bg-dark);
+.secondary-btn {
+    font-size: 0.9em;
 }
 
 /* 1. Dynamic List Styling */
-.data-list {
+.neumorphic-list {
     list-style-type: none;
     padding: 0;
 }
 
-.data-list li {
+.neumorphic-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--surface-dark);
-    padding: 10px;
+    padding: 12px 15px;
     margin-bottom: 8px;
-    border: 1px dashed var(--text-neon);
-    text-shadow: 0 0 2px var(--text-neon);
-    opacity: 1; 
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+    border-radius: 8px;
+    background: var(--bg-color);
+    box-shadow: 2px 2px 5px var(--shadow-dark), 
+                -2px -2px 5px var(--shadow-light);
+    transition: opacity 0.5s, transform 0.5s;
 }
 
-.data-list li button {
-    background-color: var(--error-neon);
-    color: var(--bg-dark);
-    padding: 6px 12px;
-    font-size: 0.8em;
-    border-radius: 4px;
-    box-shadow: 0 0 5px var(--error-neon);
+.neumorphic-list li button {
+    background-color: #ef5350; /* Merah untuk Hapus */
+    color: white;
+    padding: 6px 10px;
     border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    transition: all 0.2s;
 }
 
-/* 2. Color Changer */
+/* 2. Tombol Pengubah Warna Latar (Theme Button) */
 .theme-btn {
-    --btn-color: var(--text-neon);
+    /* Mengambil warna dari style inline di HTML untuk menampilkan warna tema */
     background-color: var(--btn-color);
-    color: var(--bg-dark);
-    padding: 10px 18px;
-    border-radius: 4px;
+    color: var(--main-color); /* Warna teks utama tetap gelap agar kontras */
+    padding: 10px 15px;
     margin-right: 15px;
-    box-shadow: 0 0 10px var(--btn-color);
-    transition: all 0.2s;
-    font-size: 0.9em;
+    /* Neumorphism standard */
+    box-shadow: 4px 4px 8px var(--shadow-dark), 
+                -4px -4px 8px var(--shadow-light);
+}
+.theme-btn:active {
+    box-shadow: inset 2px 2px 5px var(--shadow-dark), 
+                inset -2px -2px 5px var(--shadow-light);
+    transform: scale(0.98);
 }
 
 /* 3. Counter Styling */
@@ -218,30 +183,22 @@ body {
 }
 
 .counter-box {
-    border: 2px solid var(--accent-neon);
-    padding: 5px 15px;
-    background: var(--bg-dark);
-    box-shadow: 0 0 10px var(--accent-neon);
-    margin: 0 15px;
+    padding: 10px 20px;
+    margin: 0 20px;
+    background: var(--bg-color);
+    border-radius: 8px;
+    /* Display Counter Cekung */
+    box-shadow: inset 6px 6px 12px var(--shadow-dark), 
+                inset -6px -6px 12px var(--shadow-light);
 }
 
 .display-value {
     font-size: 3em;
-    font-weight: 700;
-    color: var(--accent-neon);
-    text-shadow: 0 0 5px var(--accent-neon);
-    transition: transform 0.1s;
-}
-
-.control-btn {
-    font-size: 1.8em;
-}
-
-/* Kelas Animasi JS */
-.glitch-active {
-    animation: glitch 0.1s 3; /* Glitch cepat 3x */
-    color: var(--error-neon) !important;
-    text-shadow: 0 0 5px var(--error-neon);
+    font-weight: 900;
+    color: var(--accent-color);
+    transition: color 0.3s;
+    min-width: 50px;
+    display: inline-block;
 }
 
 /* 4. Toggle Show/Hide Styling dan Animasi */
@@ -249,17 +206,19 @@ body {
     max-height: 200px;
     opacity: 1;
     overflow: hidden;
-    transition: max-height 0.6s ease-in-out, opacity 0.6s ease-in-out;
+    transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }
 
-#toggleParagraph {
-    background: var(--bg-dark);
-    border: 2px solid var(--text-neon);
-    padding: 20px;
-    border-radius: 4px;
+.neumorphic-text-box {
+    background: var(--bg-color);
+    padding: 15px;
+    border-radius: var(--neumorphic-radius);
     margin-top: 15px;
-    color: var(--text-neon);
-    box-shadow: 0 0 5px var(--text-neon);
+    color: #4a4a4a;
+    font-weight: 400;
+    /* Kotak Teks Cekung */
+    box-shadow: inset 3px 3px 6px var(--shadow-dark), 
+                inset -3px -3px 6px var(--shadow-light);
 }
 
 .hidden-content {

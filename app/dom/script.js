@@ -1,8 +1,6 @@
-// --- Variabel Konstan dari CSS ---
-// Digunakan di JS agar warna tetap konsisten tanpa mengambil dari :root setiap saat
-const NEON_ACCENT = '#ff00ff'; 
-const NEON_ERROR = '#ff3333';
-const NEON_CYAN = '#00ffff';
+// --- Variabel Warna ---
+const ACCENT_COLOR = '#3f51b5'; // Biru default
+const RESET_COLOR = '#ef5350';   // Merah lembut untuk reset
 
 // --- Bagian 1: Dynamic List ---
 const itemInput = document.getElementById('itemInput');
@@ -14,20 +12,20 @@ addItemButton.addEventListener('click', () => {
 
     if (itemText !== "") {
         const listItem = document.createElement('li');
-        listItem.textContent = `> ${itemText} | STATUS: ONLINE`;
+        listItem.textContent = itemText;
         
-        // Atur posisi awal untuk animasi masuk (Fade In + Slide Down)
+        // Atur posisi awal untuk animasi masuk
         listItem.style.opacity = '0';
         listItem.style.transform = 'translateY(10px)'; 
 
         const deleteButton = document.createElement('button');
-        deleteButton.textContent = '[DEL]';
+        deleteButton.textContent = 'Hapus';
         
-        deleteButton.addEventListener('click', () => {
-            // Pemicu animasi glitch saat menghapus
-            deleteButton.classList.add('glitch-active');
-
-            // Mulai animasi fade out/slide
+        deleteButton.addEventListener('click', function() {
+            // Pemicu efek tekan pada tombol Hapus
+            this.classList.add('btn-pressed');
+            
+            // Animasi menghilang
             listItem.style.opacity = '0';
             listItem.style.transform = 'translateX(-100%)'; 
             
@@ -52,18 +50,12 @@ addItemButton.addEventListener('click', () => {
 });
 
 // --- Bagian 2: Ubah Warna Background Secara Dinamis ---
-function changeBackgroundColor(colorCode) {
-    const defaultDarkBg = '#1f1f2e';
-    
-    // 1. Ubah warna latar belakang body (background utama)
-    document.body.style.backgroundColor = defaultDarkBg; // Tetap gelap agar kontras
+function changeBackgroundColor(newBgColor) {
+    // 1. Ubah warna latar belakang body utama (sudah ada transisi di CSS)
+    document.body.style.backgroundColor = newBgColor;
 
-    // 2. Ubah warna aksen CSS Variable untuk efek global
-    document.documentElement.style.setProperty('--text-neon', colorCode);
-    
-    // Perbarui intensitas shadow glow
-    const shadowIntensity = `0 0 5px, 0 0 10px, 0 0 20px, 0 0 40px ${colorCode}`;
-    document.documentElement.style.setProperty('--shadow-intensity', shadowIntensity);
+    // 2. Ubah variabel CSS --bg-color agar komponen Neumorphism ikut berubah warna dasar
+    document.documentElement.style.setProperty('--bg-color', newBgColor);
 }
 
 
@@ -75,70 +67,66 @@ const resetButton = document.getElementById('resetButton');
 
 let counter = 0;
 
+// Fungsi untuk memicu efek tekan pada tombol kontrol (visual)
+function pressButtonEffect(button) {
+    button.classList.add('btn-pressed');
+    setTimeout(() => {
+        button.classList.remove('btn-pressed');
+    }, 150);
+}
+
 function updateCounter(change) {
     counter += change;
     counterValueSpan.textContent = counter;
     
-    // Pemicu animasi Glitch singkat
-    counterValueSpan.classList.remove('glitch-active');
-    // Memaksa reflow sebelum menambahkan kelas kembali untuk me-restart animasi
-    void counterValueSpan.offsetWidth; 
-    counterValueSpan.classList.add('glitch-active');
-
-    // Hapus kelas glitch setelah animasi selesai (sekitar 300ms)
+    // Pemicu animasi scale kecil pada nilai
+    counterValueSpan.style.transform = 'scale(1.1)';
     setTimeout(() => {
-        counterValueSpan.classList.remove('glitch-active');
-    }, 300);
+        counterValueSpan.style.transform = 'scale(1)';
+    }, 100);
 }
 
 incrementButton.addEventListener('click', () => {
+    pressButtonEffect(incrementButton);
     updateCounter(1);
 });
 
 decrementButton.addEventListener('click', () => {
+    pressButtonEffect(decrementButton);
     updateCounter(-1);
 });
 
 resetButton.addEventListener('click', () => {
+    pressButtonEffect(resetButton);
     counter = 0; 
     counterValueSpan.textContent = counter;
 
-    // Pemicu animasi Glitch + Warna Error saat Reset
-    counterValueSpan.style.color = NEON_ERROR; 
-    
-    counterValueSpan.classList.add('glitch-active');
-    
+    // Pemicu warna reset
+    counterValueSpan.style.color = RESET_COLOR; 
+    counterValueSpan.style.transform = 'scale(1.2)';
+
     setTimeout(() => {
-        // Kembalikan ke warna aksen utama setelah 500ms
-        counterValueSpan.style.color = 'var(--accent-neon)'; 
-        counterValueSpan.classList.remove('glitch-active');
-    }, 500);
+        // Kembalikan ke warna aksen utama
+        counterValueSpan.style.color = ACCENT_COLOR; 
+        counterValueSpan.style.transform = 'scale(1)';
+    }, 300);
 });
 
 
 // --- Bagian 4: Toggle Show/Hide Element ---
 const toggleButton = document.getElementById('toggleButton');
 const toggleContainer = document.getElementById('toggleContainer');
-const toggleParagraph = document.getElementById('toggleParagraph');
 
 toggleButton.addEventListener('click', () => {
-    // Toggle kelas 'hidden-content' pada container
+    pressButtonEffect(toggleButton);
+    
+    // Toggle kelas 'hidden-content'
     const isHidden = toggleContainer.classList.toggle('hidden-content');
 
-    // Ubah teks dan status
+    // Ubah teks tombol
     if (isHidden) {
-        toggleButton.textContent = 'LOAD DATA';
-        toggleButton.style.color = 'var(--text-neon)';
-        toggleParagraph.textContent = 'ACCESS DENIED. DATA OFFLINE.';
+        toggleButton.textContent = 'TAMPILKAN INFO';
     } else {
-        toggleButton.textContent = 'HIDE DATA';
-        toggleButton.style.color = 'var(--accent-neon)';
-        toggleParagraph.textContent = 'ACCESS GRANTED. SYSTEM ONLINE.';
-        
-        // Pemicu animasi Glitch pada paragraf yang baru muncul
-        toggleParagraph.classList.add('glitch-active');
-        setTimeout(() => {
-            toggleParagraph.classList.remove('glitch-active');
-        }, 300);
+        toggleButton.textContent = 'SEMBUNYIKAN INFO';
     }
 });
