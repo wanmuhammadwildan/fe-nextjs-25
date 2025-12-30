@@ -1,6 +1,6 @@
 import Button from "@/components/ui/Button";
 import Layout from "@/components/ui/Layout";
-import Image from "next/image";
+import { service } from "@/services/services";
 
 export default function Home() {
   return (

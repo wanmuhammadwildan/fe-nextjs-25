@@ -39,6 +39,15 @@ export default async function callAPI({
     },
   }).catch((err) => err.response);
 
+  if (!response) {
+    const res = {
+      error: true,
+      message: 'Error response not received',
+      data: null,
+    };
+    return res;
+  }
+
   if (response.status > 300) {
     const res = {
       error: true,
