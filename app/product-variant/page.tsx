@@ -6,19 +6,17 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Button, IconButton } from '@mui/material';
 import { toast } from 'react-toastify';
-import RefreshIcon from '@mui/icons-material/Refresh'; // jalan / install terlebih dahulu: npm install @mui/icons-material
+import RefreshIcon from '@mui/icons-material/Refresh';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ConfirmDelete from '@/components/ui/ConfirmDelete';
-import { ProductCategoryType } from '@/services/data-types/product-category-type';
 import Link from 'next/link';
 
-export default function Page() {
+export default function ProductVariantPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const [rows, setRows] = useState<ProductCategoryType[]>([]);
-  const apiEndpoint = 'product-categories';
+  const [rows, setRows] = useState([]);
+  const apiEndpoint = 'product-variants';
 
-  // State for deletion
   const [open, setOpen] = useState(false);
   const [selectedDelete, setSelectedDelete] = useState({
     id: '',
@@ -43,8 +41,7 @@ export default function Page() {
         setRows(response.data);
       }
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Something went wrong';
+      const message = error instanceof Error ? error.message : 'Something went wrong';
       toast.error(message);
     } finally {
       setIsLoading(false);
@@ -57,19 +54,27 @@ export default function Page() {
 
   const columns: GridColDef[] = useMemo(
     () => [
-      { field: 'name', headerName: 'Category Name', width: 200 },
-      { field: 'description', headerName: 'Description', width: 300 },
+      { field: 'variant_name', headerName: 'Variant Name', width: 200 },
+      { 
+        field: 'product', 
+        headerName: 'Product', 
+        width: 200,
+        valueGetter: (params, row: any) => row?.product?.name || '-'
+      },
+      { field: 'additional_price', headerName: 'Price (+)', width: 130, type: 'number' },
+      { field: 'stock', headerName: 'Stock', width: 100, type: 'number' },
       {
         field: 'action',
         headerName: 'Action',
+        width: 120,
         renderCell: (params) => (
           <>
-            <IconButton component={Link} href={`/product-category/edit/${params.row.id}`} size="small">
+            <IconButton component={Link} href={`/product-variant/edit/${params.row.id}`} size="small">
               <EditIcon fontSize="small" />
             </IconButton>
             <IconButton
               size="small"
-              onClick={() => handleClickOpen(params.row.id, params.row.name)}
+              onClick={() => handleClickOpen(params.row.id, params.row.variant_name)}
             >
               <DeleteOutlineIcon fontSize="small" color="error" />
             </IconButton>
@@ -83,17 +88,13 @@ export default function Page() {
   return (
     <Layout>
       <div className="flex w-full justify-between items-center my-4">
-        <h1 className="text-black text-2xl font-bold">Product Category</h1>
-        <Button component={Link} href="/product-category/create" variant="contained">Add New Category</Button>
+        <h1 className="text-black text-2xl font-bold">Product Variants</h1>
+        <Button component={Link} href="/product-variant/create" variant="contained">Add New Variant</Button>
       </div>
 
       <div style={{ minHeight: 400, width: '100%' }}>
         <div className="flex justify-end mb-2">
-          <IconButton
-            onClick={getData}
-            disabled={isLoading}
-            aria-label="refresh"
-          >
+          <IconButton onClick={getData} disabled={isLoading}>
             <RefreshIcon />
           </IconButton>
         </div>

@@ -29,15 +29,29 @@ export default async function callAPI({
       };
     }
   }
-  const response = await axios({
+  const isFormData = data instanceof FormData;
+  const config: AxiosRequestConfig = {
     url,
     method,
     data,
     headers: {
       ...headers,
-      'Content-Type': contentType ? contentType : 'application/json',
     },
-  }).catch((err) => err.response);
+  };
+
+  if (!isFormData) {
+    (config.headers as any)['Content-Type'] = contentType ? contentType : 'application/json';
+  }
+
+  const response = await axios(config).catch((err) => err.response);
+
+  if (!response) {
+    return {
+      error: true,
+      message: 'Network error or server unreachable',
+      data: null,
+    };
+  }
 
   if (!response) {
     const res = {
@@ -57,11 +71,10 @@ export default async function callAPI({
     return res;
   }
 
-  const { length } = Object.keys(response.data);
   const res = {
     error: false,
     message: 'success',
-    data: length > 1 ? response.data : response.data.data,
+    data: response.data.data !== undefined ? response.data.data : response.data,
   };
 
   return res;

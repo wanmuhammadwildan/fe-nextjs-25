@@ -1,21 +1,32 @@
+'use client';
+
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import { useRouter, usePathname } from "next/navigation";
+import { toast } from "react-toastify";
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = Cookies.get('token');
+    setIsLoggedIn(!!token);
+  }, [pathname]);
+
+  const handleLogout = () => {
+    Cookies.remove('token');
+    setIsLoggedIn(false);
+    toast.success('Logged out successfully');
+    router.push('/login');
+  };
+
   return (
-    <nav className="w-full relative bg-gray-800">
+    <nav className="w-full relative bg-gray-800 rounded-lg mb-6">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* <!-- Mobile menu button--> */}
-            <button
-              type="button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500"
-            >
-              <span className="absolute -inset-0.5"></span>
-              <span className="sr-only">Open main menu</span>
-            </button>
-          </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <img
@@ -26,37 +37,65 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-white/5 hover:text-white" --> */}
                 <Link
                   href="/"
-                  aria-current="page"
-                  className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
                 >
                   Home
                 </Link>
-                <Link
-                  href="/product-category"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
-                >
-                  Product Category
-                </Link>
-                <Link
-                  href="/product"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
-                >
-                  Product
-                </Link>
-                <Link
-                  href="/product-variant"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
-                >
-                  Product Variant
-                </Link>
+                {isLoggedIn && (
+                  <>
+                    <Link
+                      href="/product-category"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                    >
+                      Product Category
+                    </Link>
+                    <Link
+                      href="/product"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                    >
+                      Product
+                    </Link>
+                    <Link
+                      href="/product-variant"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                    >
+                      Product Variant
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
+          </div>
+          <div className="flex items-center space-x-4">
+            {!isLoggedIn ? (
+              <>
+                <Link
+                  href="/login"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white cursor-pointer"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>
     </nav>
   );
 }
+
