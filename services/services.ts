@@ -14,6 +14,28 @@ export async function service(params: string, serverToken?: string) {
   });
 }
 
+export async function servicePost(params: string, data: any) {
+  const url = `${ROOT_API}/${API_VERSION}/${params}`;
+
+  return callAPI({
+    url,
+    method: 'POST',
+    data,
+    token: true,
+  });
+}
+
+export async function servicePut(params: string, id: string | number, data: any) {
+  const url = `${ROOT_API}/${API_VERSION}/${params}/${id}`;
+
+  return callAPI({
+    url,
+    method: 'PUT',
+    data,
+    token: true,
+  });
+}
+
 export async function serviceStore(
   params: string,
   data: FormData,

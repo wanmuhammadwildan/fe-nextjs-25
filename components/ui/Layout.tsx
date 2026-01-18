@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Navbar from "./Navbar";
-import { ToastContainer } from "react-toastify";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +11,6 @@ export default function Layout({ children }: LayoutProps) {
       <main className="flex min-h-screen w-full flex-col items-center py-8 px-16 bg-white sm:items-start">
         <Navbar />
         {children}
-        <ToastContainer />
       </main>
     </div>
   );

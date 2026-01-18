@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Define protected routes
-    const protectedPaths = ['/product-category', '/product', '/product-variant', '/task'];
+    const protectedPaths = ['/product-category', '/product', '/product-variant', '/task', '/profile'];
     const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
 
     // If the path is protected and there's no token, redirect to login

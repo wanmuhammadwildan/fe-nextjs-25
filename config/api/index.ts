@@ -36,6 +36,7 @@ export default async function callAPI({
     data,
     headers: {
       ...headers,
+      'Accept': 'application/json',
     },
   };
 
@@ -63,9 +64,14 @@ export default async function callAPI({
   }
 
   if (response.status > 300) {
+    let errorMessage = response.data.message;
+    if (response.data.errors) {
+      const firstErrorKey = Object.keys(response.data.errors)[0];
+      errorMessage = response.data.errors[firstErrorKey][0];
+    }
     const res = {
       error: true,
-      message: response.data.message,
+      message: errorMessage || 'An error occurred',
       data: null,
     };
     return res;

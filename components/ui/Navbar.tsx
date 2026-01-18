@@ -39,7 +39,7 @@ export default function Navbar() {
               <div className="flex space-x-4">
                 <Link
                   href="/"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
                 >
                   Home
                 </Link>
@@ -47,21 +47,27 @@ export default function Navbar() {
                   <>
                     <Link
                       href="/product-category"
-                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
                     >
                       Product Category
                     </Link>
                     <Link
                       href="/product"
-                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
                     >
                       Product
                     </Link>
                     <Link
                       href="/product-variant"
-                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
                     >
                       Product Variant
+                    </Link>
+                    <Link
+                      href="/profile"
+                      className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
+                    >
+                      Profile
                     </Link>
                   </>
                 )}
@@ -73,13 +79,13 @@ export default function Navbar() {
               <>
                 <Link
                   href="/login"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+                  className="rounded-md px-3 py-2 text-sm font-medium text-gray-100 hover:bg-white/5 hover:text-white"
                 >
                   Register
                 </Link>

@@ -4,7 +4,7 @@ import { LoginTypes } from "./data-types/auth";
 const ROOT_API = process.env.NEXT_PUBLIC_API;
 const API_VERSION = 'api/v1';
 
-export async function setSignUp(data: FormData) {
+export async function setSignUp(data: any) {
   const url = `${ROOT_API}/${API_VERSION}/register`;
 
   return callAPI({

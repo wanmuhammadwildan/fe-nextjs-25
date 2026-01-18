@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { 
-  Box, 
-  Button, 
-  Container, 
-  TextField, 
-  Typography, 
-  Paper, 
-  Avatar, 
+import {
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+  Paper,
+  Avatar,
   CircularProgress,
   Grid
 } from '@mui/material';
@@ -28,7 +28,7 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password !== passwordConfirmation) {
       toast.error('Passwords do not match');
       return;
@@ -36,13 +36,14 @@ export default function RegisterPage() {
 
     setLoading(true);
 
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('email', email);
-    formData.append('password', password);
-    formData.append('password_confirmation', passwordConfirmation);
+    const data = {
+      name,
+      email,
+      password,
+      password_confirmation: passwordConfirmation,
+    };
 
-    const response = await setSignUp(formData);
+    const response = await setSignUp(data);
 
     if (response.error) {
       toast.error(response.message);
@@ -74,7 +75,7 @@ export default function RegisterPage() {
           </Box>
           <Box component="form" onSubmit={handleSubmit} noValidate>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
                   required
                   fullWidth
@@ -87,7 +88,7 @@ export default function RegisterPage() {
                   onChange={(e) => setName(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
                   required
                   fullWidth
@@ -99,7 +100,7 @@ export default function RegisterPage() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
                   required
                   fullWidth
@@ -112,7 +113,7 @@ export default function RegisterPage() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid size={12}>
                 <TextField
                   required
                   fullWidth

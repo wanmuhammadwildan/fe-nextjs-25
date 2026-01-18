@@ -1,138 +1,192 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
 import Link from "next/link";
 import Layout from "@/components/ui/Layout";
-import { useEffect, useState } from "react";
 import { service } from "@/services/services";
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Grid, 
-  Card, 
-  CardContent, 
-  CardMedia, 
+import {
+  Box,
+  Container,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
   Button,
-  CircularProgress
+  CircularProgress,
+  Paper,
+  Avatar
 } from "@mui/material";
+import InventoryIcon from '@mui/icons-material/Inventory';
+import CategoryIcon from '@mui/icons-material/Category';
+import LayersIcon from '@mui/icons-material/Layers';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function Home() {
-  const [products, setProducts] = useState<any[]>([]);
+  const [stats, setStats] = useState({
+    products: 0,
+    categories: 0,
+    variants: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const response = await service('products');
-        if (!response.error && Array.isArray(response.data)) {
-          setProducts(response.data.slice(0, 4)); // Show top 4 products
-        } else if (!response.error) {
-          console.warn("API response data is not an array:", response.data);
-          setProducts([]);
+        const [prodRes, catRes, varRes, userRes] = await Promise.all([
+          service('products'),
+          service('product-categories'),
+          service('product-variants'),
+          service('user')
+        ]);
+
+        setStats({
+          products: prodRes.data?.length || 0,
+          categories: catRes.data?.length || 0,
+          variants: varRes.data?.length || 0
+        });
+
+        if (!userRes.error) {
+          setUser(userRes.data);
         }
       } catch (error) {
-        console.error("Failed to fetch products", error);
+        console.error("Failed to fetch dashboard data", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchDashboardData();
   }, []);
+
+  const DashboardCard = ({ title, count, icon, color, href }: any) => (
+    <Grid size={{ xs: 12, sm: 4 }}>
+      <Card sx={{
+        height: '100%',
+        borderRadius: 4,
+        boxShadow: '0 4px 20px 0 rgba(0,0,0,0.05)',
+        transition: '0.3s',
+        '&:hover': { transform: 'translateY(-5px)', boxShadow: '0 8px 30px 0 rgba(0,0,0,0.1)' }
+      }}>
+        <CardContent sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+            <Avatar sx={{ bgcolor: `${color}.light`, color: `${color}.main`, width: 56, height: 56 }}>
+              {icon}
+            </Avatar>
+            <Typography variant="h4" fontWeight="bold">
+              {count}
+            </Typography>
+          </Box>
+          <Typography variant="h6" fontWeight="medium" gutterBottom>
+            {title}
+          </Typography>
+          <Button
+            component={Link}
+            href={href}
+            endIcon={<ArrowForwardIcon />}
+            sx={{ mt: 1, textTransform: 'none', fontWeight: 'bold' }}
+          >
+            Manage
+          </Button>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+
+  if (loading) {
+    return (
+      <Layout>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh', width: '100%' }}>
+          <CircularProgress />
+        </Box>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
-      <Box sx={{ width: '100%' }}>
-        {/* Hero Section */}
-        <Box 
-          sx={{ 
-            bgcolor: 'primary.main', 
-            color: 'white', 
-            py: 10, 
+      <Box sx={{ width: '100%', pb: 5 }}>
+        {/* Welcome Section */}
+        <Paper
+          elevation={0}
+          sx={{
+            p: 4,
+            mb: 4,
             borderRadius: 4,
-            textAlign: 'center',
-            mb: 8,
-            boxShadow: 3,
-            background: 'linear-gradient(45deg, #6366f1 30%, #a855f7 90%)'
+            background: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+            color: 'white'
           }}
         >
-          <Container maxWidth="md">
-            <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
-              Welcome to Our Premium Store
-            </Typography>
-            <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
-              Discover our latest collection of high-quality products curated just for you.
-            </Typography>
-            <Button 
-              component={Link} 
-              href="/product" 
-              variant="contained" 
-              color="secondary" 
-              size="large" 
-              sx={{ py: 1.5, px: 4, fontWeight: 'bold' }}
-            >
-              Shop Now
+          <Typography variant="h4" fontWeight="bold" gutterBottom>
+            Hello, {user?.name || 'Admin'}! 👋
+          </Typography>
+          <Typography variant="body1" sx={{ opacity: 0.8, mb: 3 }}>
+            Welcome to your UAS Project Management Dashboard. Here's what's happening today.
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Button variant="contained" component={Link} href="/product/create" color="primary" sx={{ borderRadius: 2 }}>
+              Add Product
             </Button>
-          </Container>
-        </Box>
-
-        {/* Product Showcase Section */}
-        <Container maxWidth="lg" sx={{ mb: 10 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
-            <Typography variant="h4" component="h2" fontWeight="bold">
-              Featured Products
-            </Typography>
-            <Button component={Link} href="/product" color="primary">View All Products &rarr;</Button>
+            <Button variant="outlined" component={Link} href="/profile" sx={{ borderRadius: 2, color: 'white', borderColor: 'white', '&:hover': { borderColor: '#e2e8f0', bgcolor: 'rgba(255,255,255,0.1)' } }}>
+              View Profile
+            </Button>
           </Box>
+        </Paper>
 
-          {loading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', py: 10 }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Grid container spacing={4}>
-              {products.length > 0 ? products.map((product: any) => (
-                <Grid key={product.id} size={{ xs: 12, sm: 6, md: 3 }}>
-                  <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column', transition: 'transform 0.2s', '&:hover': { transform: 'scale(1.03)' } }}>
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={`https://picsum.photos/seed/${product.id}/400/300`}
-                      alt={product.name}
-                    />
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography gutterBottom variant="h6" component="h3">
-                        {product.name}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Code: {product.code}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                        Category: {product.category?.name || 'Uncategorized'}
-                      </Typography>
-                    </CardContent>
-                    <Box sx={{ p: 2 }}>
-                      <Button 
-                        component={Link} 
-                        href={`/product-variant`} 
-                        fullWidth 
-                        variant="outlined" 
-                        size="small"
-                      >
-                        View Details
-                      </Button>
-                    </Box>
-                  </Card>
-                </Grid>
-              )) : (
-                <Grid size={{ xs: 12 }}>
-                  <Typography variant="body1" textAlign="center" color="text.secondary">
-                    No products featured yet. Stay tuned!
-                  </Typography>
-                </Grid>
-              )}
+        <Typography variant="h5" fontWeight="bold" sx={{ mb: 3, color: 'black' }}>
+          System Overview
+        </Typography>
+
+        <Grid container spacing={3} sx={{ mb: 5 }}>
+          <DashboardCard
+            title="Total Products"
+            count={stats.products}
+            icon={<InventoryIcon />}
+            color="primary"
+            href="/product"
+          />
+          <DashboardCard
+            title="Product Categories"
+            count={stats.categories}
+            icon={<CategoryIcon />}
+            color="secondary"
+            href="/product-category"
+          />
+          <DashboardCard
+            title="Product Variants"
+            count={stats.variants}
+            icon={<LayersIcon />}
+            color="success"
+            href="/product-variant"
+          />
+        </Grid>
+
+        {/* Quick Actions */}
+        <Typography variant="h5" fontWeight="bold" sx={{ mb: 3, color: 'black' }}>
+          Quick Navigation
+        </Typography>
+        <Grid container spacing={2}>
+          {['Product', 'Product Category', 'Product Variant'].map((label) => (
+            <Grid key={label} size={{ xs: 12, sm: 4 }}>
+              <Button
+                component={Link}
+                href={`/${label.toLowerCase().replace(' ', '-')}`}
+                fullWidth
+                variant="outlined"
+                sx={{
+                  py: 2,
+                  borderRadius: 3,
+                  justifyContent: 'flex-start',
+                  px: 3,
+                  borderColor: 'divider',
+                  color: 'text.primary',
+                  '&:hover': { bgcolor: 'action.hover', borderColor: 'primary.main' }
+                }}
+              >
+                Go to {label}
+              </Button>
             </Grid>
-          )}
-        </Container>
+          ))}
+        </Grid>
       </Box>
     </Layout>
   );
