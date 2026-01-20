@@ -1,55 +1,47 @@
 'use client';
 
 import Layout from '@/components/ui/Layout';
-import { serviceStore } from '@/services/services';
-import { Button, TextField } from '@mui/material';
+import { servicePost } from '@/services/services';
+import {
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Paper,
+  Box,
+  Grid,
+  CircularProgress,
+} from '@mui/material';
 import React, { useState } from 'react';
-import { toast } from 'react-toastify'; // jalan / install terlebih dahulu: npm install react-toastify, tambahkan <ToastContainer /> pada app/layout.tsx
-import Cookies from 'js-cookie';
+import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function ProductCategoryCreate() {
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState<Record<string, boolean>>({});
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
 
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setIsError((prevError) => ({ ...prevError, [name]: false }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const submitData = new FormData(e.currentTarget);
+      const data = {
+        name,
+        description,
+      };
 
-      const response = await serviceStore('product-categories', submitData);
+      const response = await servicePost('product-categories', data);
       if (response.error) {
-        if (response.message == 'Token has expired') {
-          Cookies.remove('token');
-          router.push('/');
-        } else if (response.message) {
-          if (typeof response.message === 'object') {
-            Object.entries(response.message).forEach(([key, value]) => {
-              if (Array.isArray(value)) {
-                setIsError((prevError) => ({ ...prevError, [key]: true }));
-                toast.error(value[0]);
-              }
-            });
-          } else {
-            toast.error(response.message);
-          }
-        }
+        toast.error(response.message);
       } else {
-        toast.success(response.data.message);
+        toast.success('Product category created successfully!');
         router.push('/product-category');
       }
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Something went wrong';
-      toast.error(message);
+      toast.error('Something went wrong');
     } finally {
       setIsLoading(false);
     }
@@ -57,32 +49,70 @@ export default function ProductCategoryCreate() {
 
   return (
     <Layout>
-      <h1 className="text-black text-2xl font-bold">Product Category Create</h1>
-      <form onSubmit={handleSubmit} className="w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
-          <TextField
-            error={isError.name}
-            onChange={handleChange}
-            name="name"
-            id="name"
-            label="Name"
-            variant="standard"
-          />
-          <TextField
-            error={isError.description}
-            onChange={handleChange}
-            name="description"
-            id="description"
-            label="Description"
-            variant="standard"
-          />
-        </div>
-        <div className="flex justify-end">
-          <Button type="submit" variant="contained" loading={isLoading}>
-            Submit
-          </Button>
-        </div>
-      </form>
+      <Container maxWidth="sm">
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          fontWeight="bold"
+          sx={{ mb: 4 }}
+        >
+          Product Category Create
+        </Typography>
+
+        <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <Grid container spacing={3}>
+              <Grid size={12}>
+                <TextField
+                  fullWidth
+                  label="Category Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  variant="standard"
+                  required
+                />
+              </Grid>
+              <Grid size={12}>
+                <TextField
+                  fullWidth
+                  label="Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  variant="standard"
+                  multiline
+                  rows={3}
+                />
+              </Grid>
+              <Grid size={12}>
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    size="large"
+                    disabled={isLoading}
+                    sx={{ flexGrow: 1 }}
+                  >
+                    {isLoading ? (
+                      <CircularProgress size={24} color="inherit" />
+                    ) : (
+                      'Create Category'
+                    )}
+                  </Button>
+                  <Button
+                    component={Link}
+                    href="/product-category"
+                    variant="outlined"
+                    size="large"
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </Paper>
+      </Container>
     </Layout>
   );
 }

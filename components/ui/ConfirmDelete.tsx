@@ -34,7 +34,7 @@ export default function ConfirmDelete({
       if (response.error) {
         toast.error(response.message);
       } else {
-        toast.success(response.data.message);
+        toast.success(response.data?.message || response.message || 'Deleted successfully');
         if (refresh) {
           await refresh();
         }
